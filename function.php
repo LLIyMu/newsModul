@@ -15,8 +15,7 @@ function redirect($url) { // функция для редиректа на лю�
 function getComments($pdo) {//функция вывода комментариев
 
     //Объединяю таблицы для вывода имени аторизованного пользователя, текста и даты комментария 
-    $comments = $pdo->query('SELECT form.*, users.name, users.image FROM form LEFT JOIN
-     users ON form.user_id = users.id ORDER BY form.id DESC')->fetchAll();
+    $comments = $pdo->query('SELECT * FROM `newsmodul` WHERE 1')->fetchAll();
 
      return $comments;
 }
@@ -88,4 +87,83 @@ function imgUpload($image, $image_user, $validate)
     }
 
     return $_SESSION['user_img'];
+}
+
+function paginator($pdo)
+{
+
+    $paginator = [];
+    // кол-во ссылок по правую и левую сторону от активной
+    $numLinks = 2;
+    // получаем текущую страницу
+    $paginator['currentPage'] = isset($_GET['page']) ? $_GET['page'] <= 0 ? 1 : $_GET['page'] : 1;
+    // кол-во записей на одной странице
+    $paginator['perPage'] = 4;
+    // смещение для запроса в бд
+    $paginator['offset'] = ($paginator['perPage'] * $paginator['currentPage']) - $paginator['perPage'];
+    // префикс для ссылки
+    $paginator['link'] = '/?page=';
+    // получить все комменты для пагинации со смещением
+    $paginator['comments'] = getAllComsForPaginate($pdo, $paginator['offset'], $paginator['perPage']);
+    // полусить кол-во всех комментов в бд
+    $paginator['commentsCount'] = count(getAllComments($pdo));
+    // получить кол-во страниц
+    $paginator['pageCount'] = ceil($paginator['commentsCount'] / $paginator['perPage']);
+    // стартовое значения для цикла вывода комментов
+    $paginator['start'] = (($paginator['currentPage'] - $numLinks) > 0) ? $paginator['currentPage'] - $numLinks : 1;
+    // конечное значения для цикла вывода комментов
+    $paginator['end'] = (($paginator['currentPage'] + $numLinks) < $paginator['pageCount']) ? $paginator['currentPage'] + $numLinks : $paginator['pageCount'];
+
+    return $paginator;
+}
+
+/**
+ * Получение всех комментариев из базы
+ *
+ * @param [object] $pdo
+ * @return array
+ */
+function getAllComments($pdo)
+{
+    // формируем sql-запрос
+    $sql = "SELECT cs.*, us.name, us.image
+            FROM comments AS cs 
+            LEFT JOIN users AS us 
+            ON cs.user_id = us.id 
+            WHERE status = 1 
+            ORDER BY cs.id DESC";
+    // выполняем sql-запрос
+    $stmt = $pdo->query($sql);
+    // формируем ассоциативный массив полученных данных
+    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // возвращаем массив
+    return $row;
+}
+
+
+/**
+ * Получить все комментарии для пагинации
+ *
+ * @param [object] $pdo
+ * @param [integer] $offset
+ * @param [integer] $limit
+ * @return array
+ */
+function getAllComsForPaginate($pdo, $offset, $limit)
+{
+
+    $sql = "SELECT cs.*, us.name, us.image 
+            FROM comments AS cs 
+            LEFT JOIN users AS us 
+            ON cs.user_id = us.id 
+            WHERE status = 1 
+            ORDER BY cs.id DESC 
+            LIMIT $offset,$limit";
+    //dd($sql);
+    // выполняем sql-запрос
+    $stmt = $pdo->query($sql);
+    // формируем ассоциативный массив полученных данных
+    $row = $stmt->fetchAll();
+    // возвращаем массив
+    return $row;
 }

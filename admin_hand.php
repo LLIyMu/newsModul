@@ -2,7 +2,7 @@
 require_once 'db.php';
 
 if (isset($_POST['show'])) {
-    $sql = 'UPDATE form SET skip = 0 WHERE id = :id';
+    $sql = 'UPDATE newsmodul SET skip = 0 WHERE id = :id';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $_POST['show']]);
 
@@ -10,7 +10,7 @@ if (isset($_POST['show'])) {
 }
 
 if (isset($_POST['skip'])) {
-    $sql = 'UPDATE form SET skip = 1 WHERE id = :id';
+    $sql = 'UPDATE newsmodul SET skip = 1 WHERE id = :id';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $_POST['skip']]);
 
@@ -18,7 +18,7 @@ if (isset($_POST['skip'])) {
 }
 
 if (isset($_POST['delete'])) {
-    $sql = 'DELETE FROM form WHERE id = :id';
+    $sql = 'DELETE FROM newsmodul WHERE id = :id';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $_POST['delete']]);
 

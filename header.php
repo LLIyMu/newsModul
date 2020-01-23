@@ -26,7 +26,7 @@ if (!isset($_COOKIE['email'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Comments</title>
+    <title>Новости</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -45,7 +45,7 @@ if (!isset($_COOKIE['email'])) {
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="index.php">
-                    Project
+                    Новстной блог
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -77,10 +77,10 @@ if (!isset($_COOKIE['email'])) {
                                 </div>
                             </div <?php else : ?> <!-- Иначе, вывожу меню для авторизации, регистрации -->
                             <li class="nav-item">
-                                <a class="nav-link" href="login.php">Login</a>
+                                <a class="nav-link" href="login.php">Логин</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="register.php">Register</a>
+                                <a class="nav-link" href="register.php">Регистрация</a>
                             </li>
                         <?php endif; ?>
                     </ul>

@@ -4,7 +4,7 @@ session_start(); //Стартую сессию
 
 $driver = 'mysql';      //Тип БД
 $host = 'localhost';    //Хост для подключения
-$db_name = 'blog';      //Имя БД
+$db_name = 'news';      //Имя БД
 $db_user = 'mysql';     //Администратор БД
 $db_password = 'mysql'; //Пароль админимстратора
 $charset = 'utf8';      //Кодировка
