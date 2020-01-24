@@ -12,14 +12,6 @@ function redirect($url) { // функция для редиректа на лю�
     exit;
 }
 
-function getComments($pdo) {//функция вывода комментариев
-
-    //Объединяю таблицы для вывода имени аторизованного пользователя, текста и даты комментария 
-    $comments = $pdo->query('SELECT * FROM `newsmodul` WHERE 1')->fetchAll();
-
-     return $comments;
-}
-
 function requestData($request) {
     //Функцция получает данные из массива $_POST 
         $data = []; //Объявляю пустой массив $data
@@ -89,6 +81,14 @@ function imgUpload($image, $image_user, $validate)
     return $_SESSION['user_img'];
 }
 
+function getComments($pdo) {//функция вывода комментариев
+
+    //Объединяю таблицы для вывода имени аторизованного пользователя, текста и даты комментария 
+    $comments = $pdo->query('SELECT * FROM `newsmodul` WHERE 1')->fetchAll();
+
+     return $comments;
+}
+
 function paginator($pdo)
 {
 
@@ -98,7 +98,7 @@ function paginator($pdo)
     // получаем текущую страницу
     $paginator['currentPage'] = isset($_GET['page']) ? $_GET['page'] <= 0 ? 1 : $_GET['page'] : 1;
     // кол-во записей на одной странице
-    $paginator['perPage'] = 4;
+    $paginator['perPage'] = 2;
     // смещение для запроса в бд
     $paginator['offset'] = ($paginator['perPage'] * $paginator['currentPage']) - $paginator['perPage'];
     // префикс для ссылки
@@ -125,17 +125,13 @@ function paginator($pdo)
  */
 function getAllComments($pdo)
 {
+   
     // формируем sql-запрос
-    $sql = "SELECT cs.*, us.name, us.image
-            FROM comments AS cs 
-            LEFT JOIN users AS us 
-            ON cs.user_id = us.id 
-            WHERE status = 1 
-            ORDER BY cs.id DESC";
+    $sql = "SELECT * FROM `newsmodul` WHERE  1 ORDER BY news.id DESC";
     // выполняем sql-запрос
     $stmt = $pdo->query($sql);
     // формируем ассоциативный массив полученных данных
-    $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $row = $stmt->fetchAll();
     // возвращаем массив
     return $row;
 }
@@ -152,13 +148,8 @@ function getAllComments($pdo)
 function getAllComsForPaginate($pdo, $offset, $limit)
 {
 
-    $sql = "SELECT cs.*, us.name, us.image 
-            FROM comments AS cs 
-            LEFT JOIN users AS us 
-            ON cs.user_id = us.id 
-            WHERE status = 1 
-            ORDER BY cs.id DESC 
-            LIMIT $offset,$limit";
+    
+    $sql = "SELECT * FROM newsmodul WHERE 1 ORDER BY news.id DESC LIMIT $offset,$limit";
     //dd($sql);
     // выполняем sql-запрос
     $stmt = $pdo->query($sql);

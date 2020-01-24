@@ -1,5 +1,8 @@
 <?php require_once 'header.php'; ?>
 
+<?php $paginator = paginator($pdo);?>
+
+
 <main class="py-4">
     <div class="container">
         <div class="row justify-content-center">
@@ -44,6 +47,7 @@
                         <?php endif;
                         endforeach; ?>
 
+                        
                         <?php if ($paginator['comments'] && $paginator['pageCount'] > 1) : ?>
                             <div class="col-md-12" id="comments-pagination">
                                 <ul class="pagination justify-content-center">
