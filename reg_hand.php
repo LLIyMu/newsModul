@@ -18,12 +18,12 @@ if (!empty($name) && !empty($email) && !empty($passHash) && !empty($passConfirm)
     //Присваиваю переменной результат функции где выполняется запрос к БД на существующий email
 $resultEmail = checkUser($pdo, $email);
     
-        if ($name == 'admin' || $name == 'ADMIN' || $name == 'moderator' || $name == 'MODERATOR') {
+        /* if ($name == 'admin' || $name == 'ADMIN' || $name == 'moderator' || $name == 'MODERATOR') {
              // если пользователь захотел зарегатся под именем admin или другим которое может сбить с толку обычных юзеров 
             $_SESSION['nameErr'] = 'Недопустимое имя';
             //записываю сообщение об ошибке в сессию
             redirect('register.php');
-        }
+        } */
         if(strLen($name) < 5) { // проверка на минимальное количество символов
         $_SESSION['nameErr'] = 'Не меньше 5 символов';
         //записываю сообщение об ошибке в сессию

@@ -17,7 +17,7 @@ function requestData($request) {
         $data = []; //Объявляю пустой массив $data
         foreach ($request as $key => $value) { //Прогоняю данные из массива через цикл, 
                                                //что бы получить динамические данные
-            if ($key == 'newPassword') { //Если в $key попадает $password записываю в $data хешированный пароль
+            if ($key == 'password') { //Если в $key попадает $password записываю в $data хешированный пароль
                 $data['passHash'] = password_hash($value, PASSWORD_DEFAULT);
                 //continue;
             }
@@ -81,13 +81,13 @@ function imgUpload($image, $image_user, $validate)
     return $_SESSION['user_img'];
 }
 
-function getComments($pdo) {//функция вывода комментариев
+/* function getComments($pdo) {//функция вывода комментариев
 
     //Объединяю таблицы для вывода имени аторизованного пользователя, текста и даты комментария 
     $comments = $pdo->query('SELECT * FROM `newsmodul` WHERE 1')->fetchAll();
 
      return $comments;
-}
+} */
 
 function paginator($pdo)
 {
@@ -127,12 +127,13 @@ function getAllComments($pdo)
 {
    
     // формируем sql-запрос
-    $sql = "SELECT * FROM `newsmodul` WHERE  1 ORDER BY news.id DESC";
+    $sql = "SELECT * FROM newsmodul";
     // выполняем sql-запрос
     $stmt = $pdo->query($sql);
     // формируем ассоциативный массив полученных данных
     $row = $stmt->fetchAll();
     // возвращаем массив
+    //dd($row);
     return $row;
 }
 
@@ -149,12 +150,13 @@ function getAllComsForPaginate($pdo, $offset, $limit)
 {
 
     
-    $sql = "SELECT * FROM newsmodul WHERE 1 ORDER BY news.id DESC LIMIT $offset,$limit";
+    $sql = "SELECT * FROM newsmodul ORDER BY newsmodul.id DESC LIMIT $offset,$limit";
     //dd($sql);
     // выполняем sql-запрос
     $stmt = $pdo->query($sql);
     // формируем ассоциативный массив полученных данных
     $row = $stmt->fetchAll();
     // возвращаем массив
+    
     return $row;
 }
