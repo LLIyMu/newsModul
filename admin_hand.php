@@ -1,12 +1,13 @@
 <?php
 require_once 'db.php';
+require_once 'function.php';
 
 if (isset($_POST['show'])) {
     $sql = 'UPDATE newsmodul SET skip = 0 WHERE id = :id';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $_POST['show']]);
 
-    header('location:/admin.php');
+    redirect();
 }
 
 if (isset($_POST['skip'])) {
@@ -14,7 +15,7 @@ if (isset($_POST['skip'])) {
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $_POST['skip']]);
 
-    header('location:/admin.php');
+    redirect();
 }
 
 if (isset($_POST['delete'])) {
@@ -22,5 +23,5 @@ if (isset($_POST['delete'])) {
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $_POST['delete']]);
 
-    header('location:/admin.php');
+    redirect();
 }
