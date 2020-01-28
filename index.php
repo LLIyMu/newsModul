@@ -3,7 +3,7 @@
 <?php $paginator = paginator($pdo); //dd($paginator);?>
 
 
-<main class="py-4 bg-dark">
+<main class="py-4">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
@@ -13,9 +13,9 @@
                     </div>
 
                     <div class="card-body">
-                       
-                        <?php $news = $paginator['news']; //функция вывода новостей ?>
-                        <?php foreach ($news as $itemNews) :  if ($itemNews['skip'] !== 1) : ?>
+    
+                        <?php foreach ($paginator['news'] as $itemNews) : ?>  
+                            
                                 <div class="card mb-3">
                                     <div class="card-header">
                                         <a href="show.php/?id=<?= $itemNews['id'] ?>" class=""><?= $itemNews['title'] ?></a>
@@ -31,13 +31,13 @@
                                             <p class="">
                                                 <?= $itemNews['anons'] ?>
                                             </p>
-                                            <a href="show.php/?id=<?= $itemNews['id'] ?>" class="btn btn-outline-primary m-5px">Читать далее</a>
+                                            <a href="/show.php/?id=<?= $itemNews['id'] ?>" class="btn btn-outline-primary m-5px">Читать далее</a>
                                         </div>
                                     
                                 </div>
 
-                        <?php endif;
-                        endforeach; ?>
+                        
+                        <?php endforeach; ?>
 
                         <?php if ($paginator['news'] && $paginator['pageCount'] > 1) : ?>
                             <div class="col-md-12" id="comments-pagination">

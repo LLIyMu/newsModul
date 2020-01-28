@@ -78,7 +78,7 @@ function imgUpload($image, $image_user, $validate)
     return null;
 }
 
-function paginator($pdo)
+function paginator($pdo, string $page = null)
 {
 
     $paginator = [];
@@ -92,10 +92,17 @@ function paginator($pdo)
     $paginator['offset'] = ($paginator['perPage'] * $paginator['currentPage']) - $paginator['perPage'];
     // префикс для ссылки
     $paginator['link'] = '/?page=';
-    // получить все новости для пагинации со смещением
-    $paginator['news'] = getAllComsForPaginate($pdo, $paginator['offset'], $paginator['perPage']);
-    // полусить кол-во всех новостей в бд
-    $paginator['newsCount'] = count(getAllComments($pdo));
+    if ($page == 'admin') {
+        // получить все новости для пагинации со смещением
+        $paginator['news'] = getAllComsForPaginate($pdo, $paginator['offset'], $paginator['perPage'] );
+        // полусить кол-во всех новостей в бд
+        $paginator['newsCount'] = count(getAllComments($pdo));
+    } else {
+        //условие для index.php
+        $paginator['news'] = getAllComsForPaginate($pdo, $paginator['offset'], $paginator['perPage'], 'skip = 0');
+        $paginator['newsCount'] = count(getAllComments($pdo, 'skip = 0'));
+    }
+    
     // получить кол-во страниц
     $paginator['pageCount'] = ceil($paginator['newsCount'] / $paginator['perPage']);
     // стартовое значения для цикла вывода новостей
@@ -106,17 +113,14 @@ function paginator($pdo)
     return $paginator;
 }
 
-/**
- * Получение всех комментариев из базы
- *
- * @param [object] $pdo
- * @return array
- */
-function getAllComments($pdo)
-{
-   
+function getAllComments($pdo, $where = null)
+{   
+    $sql = "SELECT * FROM newsmodul ";
+    if ($where) {
+        $sql .= "WHERE {$where} ";
+    }
     // формируем sql-запрос
-    $sql = "SELECT * FROM newsmodul ORDER BY id ASC";
+    $sql .= "ORDER BY id DESC";
     // выполняем sql-запрос
     $stmt = $pdo->query($sql);
     // формируем ассоциативный массив полученных данных
@@ -126,27 +130,19 @@ function getAllComments($pdo)
     return $row;
 }
 
-
-/**
- * Получить все комментарии для пагинации
- *
- * @param [object] $pdo
- * @param [integer] $offset
- * @param [integer] $limit
- * @return array
- */
-function getAllComsForPaginate($pdo, $offset, $limit)
+function getAllComsForPaginate($pdo, $offset, $limit, $where = null)
 {
-
-    
-    $sql = "SELECT * FROM newsmodul ORDER BY id DESC LIMIT $offset,$limit";
+    $sql = "SELECT * FROM newsmodul ";
+    if ($where) {
+        $sql .= "WHERE {$where} ";
+    }
+    $sql .= "ORDER BY id DESC LIMIT $offset,$limit";
     //dd($sql);
     // выполняем sql-запрос
     $stmt = $pdo->query($sql);
     // формируем ассоциативный массив полученных данных
     $row = $stmt->fetchAll();
-    // возвращаем массив
-    
+    // возвращаем массив 
     return $row;
 }
 

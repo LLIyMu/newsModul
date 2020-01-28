@@ -1,7 +1,7 @@
 <?php
 require_once 'header.php';
 
-$paginator = paginator($pdo); //dd($paginator);
+$paginator = paginator($pdo, 'admin'); //dd($paginator);
 $paginator['link'] = 'admin.php?page=';?>
 
 
@@ -41,9 +41,8 @@ $paginator['link'] = 'admin.php?page=';?>
                                     </thead>
 
                                     <tbody>
-                                        <?php $news = $paginator['news']; //функция вывода новостей?>
-
-                                        <?php foreach ($news as $itemNews) : //вывод новостей?>
+                                        
+                                        <?php foreach ($paginator['news'] as $itemNews) : //вывод новостей?>
 
                                             <tr>
                                                 <td>
