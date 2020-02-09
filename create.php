@@ -30,7 +30,7 @@ require_once 'function.php';
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="index.php">
-                    Новостной блог
+                    Прокачай свой ум !
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -56,14 +56,14 @@ require_once 'function.php';
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3>Добавить новость</h3>
+                                <h3>Добавь новую задачу</h3>
                             </div>
 
                             <div class="card-body">
-                                <div class="alert alert-success <? if (empty($_SESSION['newsSucces'])) : echo 'd-none' ?><? endif; ?>" role="alert">
+                                <div class="alert alert-success <? if (empty($_SESSION['taskSucces'])) : echo 'd-none' ?><? endif; ?>" role="alert">
                                     <?= //Добавляю сообщение о добавлении комментария
-                                        $_SESSION['newsSucces'];
-                                    unset($_SESSION['newsSucces']);
+                                        $_SESSION['taskSucces'];
+                                    unset($_SESSION['taskSucces']);
                                     ?>
 
                                 </div>
@@ -71,38 +71,24 @@ require_once 'function.php';
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Заголовок</label>
-                                                <input type="text" class="form-control <? if (isset($_SESSION['titleErr'])) : ?> is-invalid<? endif; ?>" name="title" id="exampleFormControlInput1">
+                                                <label for="exampleFormControlInput1">Name</label>
+                                                <input type="text" class="form-control <? if (isset($_SESSION['nameErr'])) : ?> is-invalid<? endif; ?>" name="name" id="exampleFormControlInput1">
                                                 <!-- вызываю функцию вывода сообщений о ошибке валидации
                                                          принимает строку с названием ошибки -->
-                                                <?php errMessage('titleErr'); ?>
+                                                <?php errMessage('nameErr'); ?>
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Дата</label>
-                                                <input type="date" class="form-control <? if (isset($_SESSION['datelErr'])) : ?>is-invalid<? endif; ?>" name="date"">
+                                                <label for="exampleFormControlInput1">"Email</label>
+                                                <input type="text" class="form-control <? if (isset($_SESSION['emailErr'])) : ?>is-invalid<? endif; ?>" name="email">
                                                 <!-- вызываю функцию вывода сообщений о ошибке валидации
                                                          принимает строку с названием ошибки -->
-                                                <?php errMessage('dateErr'); ?>
+                                                <?php errMessage('emailErr'); ?>
                                             </div>
 
+                                            
                                             <div class="form-group">
-                                                <label for="exampleFormControlInput1">Анонс</label>
-                                                <input type="text" class="form-control <? if (isset($_SESSION['anonsErr'])) : ?>is-invalid<? endif; ?>" name="anons">
-                                                <!-- вызываю функцию вывода сообщений о ошибке валидации
-                                                         принимает строку с названием ошибки -->
-                                                <?php errMessage('anonsErr'); ?>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="exampleFormControlInput1">Добавить картинку</label>
-                                                <input type="file" class="form-control <? if (isset($_SESSION['errImg'])) : ?>is-invalid<? endif; ?>" name="image" id="exampleFormControlInput1">
-                                                <!-- вызываю функцию вывода сообщений о ошибке валидации
-                                                         принимает строку с названием ошибки -->
-                                                <?php errMessage('errImg'); ?>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleFormControlInput1">Добавить текст</label>
+                                                <label for="exampleFormControlInput1">Добавить текст задачи</label>
                                                 <textarea type="text" class="form-control <? if (isset($_SESSION['textErr'])) : ?>is-invalid<? endif; ?>" name="text" id="exampleFormControlInput1"></textarea>
                                                 <!-- вызываю функцию вывода сообщений о ошибке валидации
                                                          принимает строку с названием ошибки -->
@@ -111,8 +97,8 @@ require_once 'function.php';
                                         </div>
                                         
                                         <div class="col-md-12">
-                                            <button class="btn btn-success">Добавить новость</button>
-                                            <a class="btn btn-primary" href="http://newsmodul/index.php">На главную</a>
+                                            <button class="btn btn-success">Добавить задачу</button>
+                                            <a class="btn btn-primary" href="http://task/index.php">На главную</a>
                                         </div>
                                            
                                     </div>

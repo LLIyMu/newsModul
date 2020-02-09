@@ -19,7 +19,7 @@ $paginator['link'] = 'admin.php?page=';?>
                             <div class="card-header d-flex">
                             <form action="#" method="/">
                                 
-                                    <h3 class="ml-auto">Добавить новость</h3>
+                                    <h3 class="ml-auto">Добавить задачу</h3>
                                     <a href="/create.php" class="btn btn-primary mr-auto" aria-pressed="true">добавить</a>
                                 
                             </form>
@@ -42,27 +42,24 @@ $paginator['link'] = 'admin.php?page=';?>
 
                                     <tbody>
                                         
-                                        <?php foreach ($paginator['news'] as $itemNews) : //вывод новостей?>
+                                        <?php foreach ($paginator['task'] as $itemTask) : //вывод новостей?>
 
                                             <tr>
+                                                
+                                                <td><textarea class="mt-2"><?= $itemTask['text'] ?></textarea></td>
+                                                
                                                 <td>
-                                                    <img src="/img/<?= $itemNews['image'] ?>" alt="" class="img-fluid" width="64" height="64">
-                                                </td>
-                                                <td><h5 class="mt-2"><?= $itemNews['title'] ?></h5></td>
-                                                <td><?= date('d/m/Y', strtotime($itemNews['date'])) ?></td>
-                                                <td><?= $itemNews['anons'] ?></td>
-                                                <td>
-                                                    <?php if ($itemNews['skip'] == 1) : ?>
+                                                    <?php if ($itemTask['ok'] == 1) : ?>
                                                         <form action="/admin_hand.php" method="post">
-                                                            <button type="submit" name="show" value="<?php echo $itemNews['id']; ?>" class="btn btn-success">Показать</button>
+                                                            <button type="submit" name="show" value="<?php echo $itemTask['id']; ?>" class="btn btn-success">Не выполнено</button>
                                                         </form>
                                                     <?php else : ?>
                                                         <form action="/admin_hand.php" method="post">
-                                                            <button type="submit" name="skip" value="<?php echo $itemNews['id']; ?>" class="btn btn-warning">Скрыть</button>
+                                                            <button type="submit" name="skip" value="<?php echo $itemTask['id']; ?>" class="btn btn-warning">Выполнено</button>
                                                         </form>
                                                     <?php endif; ?>
                                                         <form action="/admin_hand.php" method="post">
-                                                            <button onclick="return confirm('are you sure?')" name="delete" value="<?php echo $itemNews['id']; ?>" class="btn btn-danger">
+                                                            <button onclick="return confirm('are you sure?')" name="delete" value="<?php echo $itemTask['id']; ?>" class="btn btn-danger">
                                                                 Удалить</button>
                                                         </form>
                                                 </td>
@@ -71,7 +68,7 @@ $paginator['link'] = 'admin.php?page=';?>
                                         
                                     </tbody>
                                 </table>
-                                <?php if ($paginator['news'] && $paginator['pageCount'] > 1) : ?>
+                                <?php if ($paginator['task'] && $paginator['pageCount'] > 1) : ?>
                                             <div class="col-md-12" id="comments-pagination">
                                                 <ul class="pagination justify-content-center">
                                                     <?php if ($paginator['currentPage'] > 1) : ?>

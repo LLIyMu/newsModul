@@ -23,6 +23,10 @@ function requestData($request) {
         $data = []; //Объявляю пустой массив $data
         foreach ($request as $key => $value) { //Прогоняю данные из массива через цикл, 
                                                //что бы получить динамические данные
+            if ($key == 'password') { //Если в $key попадает $password записываю в $data хешированный пароль
+                $data['passHash'] = password_hash($value, PASSWORD_DEFAULT);
+                //continue;
+            }
             $data[$key] = htmlentities(trim($value));//Универсальная переменная содержащая полученные данные через $_POST 
         }
         //dd($data);
@@ -40,43 +44,7 @@ function errMessage($message) {
     
 }
 
-// Функция ззагрузки изображения, принимает $image = $_FILES, $image_user = $_SESSION['image']
-function imgUpload($image, $image_user, $validate)
-{
-    //dd($image);
-    if (!$validate) { // Если НЕ валидация
-        return false; // Возвращаем false
-    }
-    if (!empty($image['name'])) { // Если существует $image
 
-        $uploadDir = __DIR__ . '\\img\\'; // Создаю дерикторию файла
-
-        $avialabelExtention = ['jpg', 'svg', 'png', 'gif']; // Массив с допустимыми расширениями
-
-        $extention = pathinfo($image['name'], PATHINFO_EXTENSION); // Получаю расширение файла
-
-        $filename = uniqid() . "." . $extention; // Задаю уникальное имя файла и присваиваю его переменной
-
-
-        if ($_FILES['image']['error'] > 0 && $_FILES['image']['error'] != 4) {
-
-            $_SESSION['errImg'] = 'При загрузке произошла ошибка';
-            return false;
-        }
-
-        if (!in_array($extention, $avialabelExtention)) {
-
-            $_SESSION['errImg'] = 'Неверное расширение, для загрузки используйте: ' . implode(', ', $avialabelExtention);
-            return false;
-        }
-
-        move_uploaded_file($image['tmp_name'], 'img/' . $filename);
-
-        return $filename;
-    }
-
-    return null;
-}
 
 function paginator($pdo, string $page = null)
 {
@@ -87,35 +55,36 @@ function paginator($pdo, string $page = null)
     // получаем текущую страницу
     $paginator['currentPage'] = isset($_GET['page']) ? $_GET['page'] <= 0 ? 1 : $_GET['page'] : 1;
     // кол-во записей на одной странице
-    $paginator['perPage'] = 4;
+    $paginator['perPage'] = 3;
     // смещение для запроса в бд
     $paginator['offset'] = ($paginator['perPage'] * $paginator['currentPage']) - $paginator['perPage'];
     // префикс для ссылки
     $paginator['link'] = '/?page=';
     if ($page == 'admin') {
         // получить все новости для пагинации со смещением
-        $paginator['news'] = getAllComsForPaginate($pdo, $paginator['offset'], $paginator['perPage'] );
+        $paginator['task'] = getAllComsForPaginate($pdo, $paginator['offset'], $paginator['perPage'] );
         // полусить кол-во всех новостей в бд
-        $paginator['newsCount'] = count(getAllComments($pdo));
+        $paginator['taskCount'] = count(getAllComments($pdo));
     } else {
         //условие для index.php
-        $paginator['news'] = getAllComsForPaginate($pdo, $paginator['offset'], $paginator['perPage'], 'skip = 0');
-        $paginator['newsCount'] = count(getAllComments($pdo, 'skip = 0'));
+        $paginator['task'] = getAllComsForPaginate($pdo, $paginator['offset'], $paginator['perPage'], 'ok = 0');
+        $paginator['taskCount'] = count(getAllComments($pdo, 'ok = 0'));
     }
     
     // получить кол-во страниц
-    $paginator['pageCount'] = ceil($paginator['newsCount'] / $paginator['perPage']);
+    $paginator['pageCount'] = ceil($paginator['taskCount'] / $paginator['perPage']);
     // стартовое значения для цикла вывода новостей
     $paginator['start'] = (($paginator['currentPage'] - $numLinks) > 0) ? $paginator['currentPage'] - $numLinks : 1;
     // конечное значения для цикла вывода новостей
     $paginator['end'] = (($paginator['currentPage'] + $numLinks) < $paginator['pageCount']) ? $paginator['currentPage'] + $numLinks : $paginator['pageCount'];
 
     return $paginator;
+    
 }
 
 function getAllComments($pdo, $where = null)
 {   
-    $sql = "SELECT * FROM newsmodul ";
+    $sql = "SELECT * FROM taskList ";
     if ($where) {
         $sql .= "WHERE {$where} ";
     }
@@ -129,10 +98,11 @@ function getAllComments($pdo, $where = null)
     //dd($row);
     return $row;
 }
+//dd(getAllComments($pdo, $where = null));
 
 function getAllComsForPaginate($pdo, $offset, $limit, $where = null)
 {
-    $sql = "SELECT * FROM newsmodul ";
+    $sql = "SELECT * FROM taskList ";
     if ($where) {
         $sql .= "WHERE {$where} ";
     }
@@ -146,11 +116,3 @@ function getAllComsForPaginate($pdo, $offset, $limit, $where = null)
     return $row;
 }
 
-function getOneNews($pdo, $id) {
-
-    $sql = "SELECT * FROM newsmodul WHERE id = $id";
-    $stmt = $pdo->query($sql);
-    // формируем ассоциативный массив полученных данных
-    $row = $stmt->fetch();
-    return $row;
-}

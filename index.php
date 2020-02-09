@@ -9,37 +9,41 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3>Новости</h3>
+                        <h3>Задачи</h3>
+                        <a href="http://task/create.php" class="btn btn-success">Добавить задачу</a>
                     </div>
 
                     <div class="card-body">
     
-                        <?php foreach ($paginator['news'] as $itemNews) : ?>  
+                        <?php foreach ($paginator['task'] as $itemTask) : ?>  
                             
                                 <div class="card mb-3">
-                                    <div class="card-header">
-                                        <a href="show.php/?id=<?= $itemNews['id'] ?>" class=""><?= $itemNews['title'] ?></a>
-                                    </div>
+                                    
                                         <div class="card-body  h-100px">
-                                            
-                                            <?php if (!empty($itemNews['image'])): ?>
-                                            <img src="img/<?= $itemNews['image'] ?>" class="mr-3 float-left" alt="..." width="64" height="64">
-                                            <?php endif; ?>
 
-                                            <span><small><?= date('d/m/Y', strtotime($itemNews['date'])) ?></small></span>
+                                            <span class="text-primary"><small > <?= $itemTask['name'] ?></small></span></br>
+                                            <span class="text-primary"><small><?= $itemTask['email'] ?></small></span>
+                                            <h5>
+                                                <?= $itemTask['text'] ?>
+                                            </h5>
+                                            <?php if ($itemTask['ok'] == 1) : ?>
+                                                <div class="alert alert-success" role="alert">
+                                                    <p>Отредактировано администратором</p>
+                                                    
+                                                </div>
+                                            <?php else : ?>
+                                                <div class="alert alert-success" role="alert">
+                                                    Выполнено
+                                                </div>
+                                            <?php endif; ?>
                                             
-                                            <p class="">
-                                                <?= $itemNews['anons'] ?>
-                                            </p>
-                                            <a href="/show.php/?id=<?= $itemNews['id'] ?>" class="btn btn-outline-primary m-5px">Читать далее</a>
                                         </div>
                                     
                                 </div>
 
-                        
                         <?php endforeach; ?>
 
-                        <?php if ($paginator['news'] && $paginator['pageCount'] > 1) : ?>
+                        <?php if ($paginator['task'] && $paginator['pageCount'] > 1) : ?>
                             <div class="col-md-12" id="comments-pagination">
                                 <ul class="pagination justify-content-center">
                                     <?php if ($paginator['currentPage'] > 1) : ?>

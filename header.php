@@ -1,6 +1,21 @@
 <?php
 require_once 'db.php';
 require_once 'function.php';
+
+
+//Если  не существует куки записываем в сессию данные
+if (!isset($_COOKIE['email'])) {
+    $email = $_SESSION['email'];     //Записываю в переменную почту из сессии
+    $name = $_SESSION['name'];       //Записываю в переменную имя из сессии
+    $user_id = $_SESSION['user_id']; //Записываю в переменную ID из сессии
+
+} else { // Иначе записываю в куки
+    $email = $_COOKIE['email'];
+    $name = $_COOKIE['name'];
+    $user_id = $_COOKIE['user_id'];
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +25,7 @@ require_once 'function.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Новости</title>
+    <title>Задачник</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -28,8 +43,8 @@ require_once 'function.php';
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="http://newsmodul/index.php">
-                    Новостной блог
+                <a class="navbar-brand" href="http://task/index.php">
+                    Прокачай свой ум !
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -40,10 +55,31 @@ require_once 'function.php';
                         <ul class="navbar-nav mr-auto">
 
                         </ul>
-
-                        <!-- Right Side Of Navbar -->
                         <ul class="navbar-nav ml-auto">
-                             <a class="btn btn-success" href="http://newsmodul/admin.php">Админ панель</a>        
+                            <?php if (isset($email)) : ?>
+                                <!-- если есть сессия то выводим вместо меню, имя пользователя -->
+                                <div class="dropdown">
+                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Привет, <?php echo $name ?>
+                                    </button>
+
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        
+                                        <!-- если в сессии есть админ, выводим для него вкладку -->
+                                        <?php if ($_SESSION['role'] == 1) : ?>
+                                            <a class="dropdown-item" href="http://task/admin.php">Админ панель</a>
+                                        <?php endif; ?>
+                                        <a class="dropdown-item" href="logout.php">Выход</a>
+                                    </div>
+                                </div <?php else : ?> <!-- Иначе, вывожу меню для авторизации, регистрации -->
+                                <li class="nav-item">
+                                    <a class="nav-link" href="login.php">Login</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="register.php">Register</a>
+                                </li>
+                            <?php endif; ?>
+                            
                         </ul>
                     </div>    
                 </div>

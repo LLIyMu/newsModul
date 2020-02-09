@@ -7,51 +7,41 @@ require_once 'function.php';
 $data = requestData($_POST);
 
 //dd(requestData($_POST));
-$image = $_FILES['image']; // записываю в переменную данные о полученной картинке
-$image_user = $_SESSION['user_img'];
 
 $validate = 1; // переменная состояния валидации
 
-if (empty($data['title'])) {
-    $_SESSION['titleErr'] = 'поле не должно быть пустым';
+if (empty($data['name'])) {
+    $_SESSION['nameErr'] = 'введите ваше имя';
     $validate = 0;
     redirect('create.php');
 }
 
-if (empty($data['date'])) {
-    $_SESSION['dateErr'] = 'укажите дату';
+if (!preg_match('#^([a-z0-9_.-]{1,20}+)@([a-z0-9_.-]+)\.([a-z\.]{2,10})$#', $data['email'])) {
+
+    $_SESSION['emailErr'] = 'Укажите правильный email'; //зписываю сообщение об ошибке в сессию
+    $validate = 0;                                      //валидация не пройдена(false)
+}
+
+if (empty($data['email'])) {
+    $_SESSION['emailErr'] = 'введите ваш email';
     $validate = 0;
     redirect('create.php');
 }
 
 if (empty($data['text'])) {
-    $_SESSION['textErr'] = 'введите текст';
+    $_SESSION['textErr'] = 'введите текст задачи';
     $validate = 0;
     redirect('create.php');
-}
-
-if (empty($data['anons'])) {
-    $_SESSION['anonsErr'] = 'введите анонс';
-    $validate = 0;
-    redirect('create.php');
-}
-
-if (false === $img_data = imgUpload($image, $image_user, $validate))  {
-    
-    $validate = 0;
-} else {
-    $data['image'] = $img_data;
 }
 
 if($validate == 1) { //если валидация пройдена (true)
     
     //dd($data);
-    $sql = 'INSERT INTO `newsmodul` (`title`, `anons`, `text`, `image`, `date`) VALUES (:title, :anons, :text, :image, :date)';
-    $values = ['title' => $data['title'], 'anons' => $data['anons'], 'text' => $data['text'], 'image' => $data['image'], 'date' => $data['date']]; //подготавливаю запрос к БД и меняю name или email
+    $sql = 'INSERT INTO `taskList` (`name`, `email`, `text`) VALUES (:name, :email, :text)';
+    $values = ['name' => $data['name'], 'email' => $data['email'], 'text' => $data['text']]; //подготавливаю запрос к БД и меняю name или email
     $stmt_up = $pdo->prepare($sql);                 //подготавливаю запрос (защита от sql-инъекций)
     $stmt_up->execute($data);                       //выполнение запроса
     
-    $_SESSION['newsSucces'] = 'Новость добавлена';  
-
+    $_SESSION['taskSucces'] = 'Задача добавлена';  
     }
 redirect('create.php');
